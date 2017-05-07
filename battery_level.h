@@ -182,9 +182,9 @@
 	#include <battery_read_external.h>
 #else
 	#ifdef BAT_EXTERNAL_ADC
-		#include <battery_read_external_v0.3.h>
+		#include "battery_read_external.h"
 	#else
-		#include <battery_read_internal_v0.3.h>
+		#include "battery_read_internal.h"
 	#endif
 #endif
 

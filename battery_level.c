@@ -1,4 +1,4 @@
-#include "battery_level_v0.3.h"
+#include "battery_level.h"
 
 /* ----------- FUNCIONES PUBLICAS ----------- */
 
@@ -30,11 +30,11 @@ float Voltaje;
 #else
 	//devuelve el valor voltaje leido por el ADC (0v - Vref)
 	if(read == VOLT_0_VREF){
-		Voltaje = (float)ValADC * BAT_PIC_VREF / ADC_MAX_VAL
+		Voltaje = (float)ValADC * BAT_PIC_VREF / ADC_MAX_VAL;
 	}
 	//devuelve el voltaje convertido
 	else{
-		Voltaje = (float)ValADC * BAT_PIC_VREF * BAT_PROPORCION_IN_OUT / ADC_MAX_VAL
+		Voltaje = (float)ValADC * BAT_PIC_VREF * BAT_PROPORCION_IN_OUT / ADC_MAX_VAL;
 	}
 	
 #endif
