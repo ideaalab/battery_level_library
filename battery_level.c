@@ -11,36 +11,42 @@
  */
 #ifdef BATTERY_READ_INTERNAL_H
 float ADCenVoltaje(void){
-#else
-float ADCenVoltaje(short read){
-#endif
-	
 #if getenv("ADC_RESOLUTION") == 8
 int ValADC = ~LeerADC();			//leo voltaje ADC
 #elif getenv("ADC_RESOLUTION") == 10
 long ValADC = ~LeerADC() & 0x3FF;	//leo voltaje ADC
 #endif
 
-float Voltaje;
-
-//conversion de la lectura interna en voltaje Vdd
-#ifdef BATTERY_READ_INTERNAL_H
+	float Voltaje;
+	
+	//conversion de la lectura interna en voltaje Vdd
 	Voltaje = (float)ADCMAX_X_FVR / ValADC;
-//conversion de la lectura externa en voltaje
+	return(Voltaje);
+}
 #else
+float ADCenVoltaje(short read){
+#if getenv("ADC_RESOLUTION") == 8
+int ValADC = LeerADC();			//leo voltaje ADC
+#elif getenv("ADC_RESOLUTION") == 10
+long ValADC = LeerADC();	//leo voltaje ADC
+#endif
+
+	float Voltaje;
+	
 	//devuelve el valor voltaje leido por el ADC (0v - Vref)
 	if(read == VOLT_0_VREF){
-		Voltaje = (float)ValADC * BAT_PIC_VREF / ADC_MAX_VAL;
+		//Voltaje = (float)ValADC * BAT_PIC_VREF / ADC_MAX_VAL;
+		Voltaje = BAT_VOLTxADC * ValADC;
 	}
 	//devuelve el voltaje convertido
 	else{
-		Voltaje = (float)ValADC * BAT_PIC_VREF * BAT_PROPORCION_IN_OUT / ADC_MAX_VAL;
+		//Voltaje = (float)ValADC * BAT_PIC_VREF * BAT_PROPORCION_IN_OUT / ADC_MAX_VAL;
+		Voltaje = BAT_PROPORCION_IN_OUT * BAT_VOLTxADC * ValADC;
 	}
 	
-#endif
-	
-	return Voltaje;
+	return(Voltaje);
 }
+#endif
 
 /*
  * Devuelve un valor de bateria con etiquetas BAT_CRITICA, BAT_BAJA, BAT_MEDIA y BAT_ALTA

@@ -43,7 +43,7 @@
  * Formula para convertir VoutADC en Vin:
  *	- Vin = ((R1 + R2) / R2) * (VoutADC / ADCMaxVal * Vref)		[OK]
  *		  = [((R1 + R2) * Vref) / (R2 * ADCMaxVal)] * VoutADC	[OK]
- *		  = BAT_PROPORCION_OUT_IN * BAT_VOLTxADC * VoutADC		[?]
+ *		  = BAT_PROPORCION_IN_OUT * BAT_VOLTxADC * VoutADC		[OK]
  * 
  * Formula para obtener VoutADC a partir de Vin:
  *	- VoutADC = (Vin * ADCMaxVal * R2) / ((R1 + R2) * Vref)		[OK]
