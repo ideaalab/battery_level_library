@@ -53,11 +53,11 @@
  *	- VinMax = voltaje maximo de la bateria + margen de seguridad
  *	- Vref = voltaje del PIC o Vref
  *	- Utilizando la formula probar diferentes valores estandar hasta encontrar la proporcion adecuada
- *		VinMax / Vref = R2 / (R1 + R2)
+ *		Vref / VinMax = R2 / (R1 + R2)							[OK]
  *	- Las resistencias tendran un consumo constante en el circuito,
  *	  elegir valores elevados (> 10K) para disminuir el consumo
- *		Vin / (R1 + R2) = Consumo en A
- *		Vin / (R1 + R2) * 1000 = Consumo en mA
+ *		Vin / (R1 + R2) = Consumo en A							[OK]
+ *		Vin / (R1 + R2) * 1000 = Consumo en mA					[OK]
  */
 
 #ifndef BAT_ADC_CH
