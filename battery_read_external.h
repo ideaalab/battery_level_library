@@ -10,7 +10,7 @@
 
 /*
  * ------------------------------ CALCULOS ------------------------------------
- * CALCULOS USANDO REFERENCIA DE VOLTAJE EXTERNA (Vbat > 5v):
+ * CALCULOS PARA LEER VOLTAJE EXTERNo (Vbat > 5v):
  * Se usa un divisor de tension:
  * 
  *	           R1                R2
@@ -64,7 +64,19 @@
 #ERROR "Hay que declarar el canal del ADC que se usa para leer el voltaje"
 #endif
 
-#ifndef BAT_PIC_VREF
+#if defined(BAT_VREF_INTERNO)
+	#if BAT_VREF_INTERNO == VREF_ADC_1v024
+	#define V_REF			(1.024)
+	#elif BAT_VREF_INTERNO == VREF_ADC_2v048
+	#define V_REF			(2.048)
+	#elif BAT_VREF_INTERNO == VREF_ADC_4v096
+	#define V_REF			(4.096)
+	#endif
+#elif defined(BAT_VREF_EXTERNO)
+	#define V_REF	BAT_VREF_EXTERNO
+#elif defined(BAT_VREF_VDD)
+	#define V_REF	BAT_VREF_VDD
+#else
 #ERROR "Hay que declarar el voltaje de referencia o el voltaje al que funciona el PIC"
 #endif
 
@@ -76,11 +88,11 @@
 #ERROR "Hay que declarar R2 del divisor de tension"
 #endif
 
-#define BAT_PROPORCION_IN_OUT	((float)(BAT_R1 + BAT_R2) / BAT_R2)		// Vin / Vout
-#define BAT_PROPORCION_OUT_IN	((float)BAT_R2 / (BAT_R1 + BAT_R2))		// Vout / Vin
-#define BAT_ADCxVOLT			((float)ADC_MAX_VAL / BAT_PIC_VREF)
-#define BAT_VOLTxADC			((float)BAT_PIC_VREF / ADC_MAX_VAL)
-#define BAT_VIN_MAX				(BAT_PROPORCION_IN_OUT * BAT_PIC_VREF)
+#define BAT_PROPORCION_IN_OUT	((float)(BAT_R1 + BAT_R2) / BAT_R2)	// Vin / Vout
+#define BAT_PROPORCION_OUT_IN	((float)BAT_R2 / (BAT_R1 + BAT_R2))	// Vout / Vin
+#define BAT_ADCxVOLT			((float)ADC_MAX_VAL / V_REF)		// cuantas uds ADC equivale 1v
+#define BAT_VOLTxADC			((float)V_REF / ADC_MAX_VAL)		// cuantos volts equivalen 1 ADC
+#define BAT_VIN_MAX				(BAT_PROPORCION_IN_OUT * V_REF)		// voltaje maximo que podemos leer
 
 //Vin * (ADCMaxVal / Vref) * (R2 / (R1 + R2))
 #define ADC_BAT_BAJA	(long)(V_BAT_BAJA * BAT_ADCxVOLT * BAT_PROPORCION_OUT_IN)
@@ -96,10 +108,10 @@
 //mostramos los diferentes valores de la configuracion seleccionada
 #ifdef BAT_DEBUG
 
-#warning Vbat: BAT_TYPE
+#warning Vbat: V_BAT_NOM
 #warning Vbat maximo permitido: BAT_VIN_MAX
-#warning Vref: BAT_PIC_VREF
-#warning Consumo de R1 + R2: (BAT_TYPE / (BAT_R1 + BAT_R2) * 1000) mAh
+#warning Vref: V_REF
+#warning Consumo de R1 + R2: (V_BAT_NOM / (BAT_R1 + BAT_R2) * 1000) mAh
 
 #warning Bateria BAJA a partir de: V_BAT_BAJA
 #warning Bateria MEDIA a partir de: V_BAT_MEDIA

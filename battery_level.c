@@ -33,15 +33,12 @@ long ValADC = LeerADC();	//leo voltaje ADC
 
 	float Voltaje;
 	
-	//devuelve el valor voltaje leido por el ADC (0v - Vref)
-	if(read == VOLT_0_VREF){
-		//Voltaje = (float)ValADC * BAT_PIC_VREF / ADC_MAX_VAL;
-		Voltaje = BAT_VOLTxADC * ValADC;
-	}
-	//devuelve el voltaje convertido
-	else{
-		//Voltaje = (float)ValADC * BAT_PIC_VREF * BAT_PROPORCION_IN_OUT / ADC_MAX_VAL;
-		Voltaje = BAT_PROPORCION_IN_OUT * BAT_VOLTxADC * ValADC;
+	//calcula el voltaje leido por el ADC (0v - Vref)
+	Voltaje = BAT_VOLTxADC * ValADC;
+	
+	if(read == VOLT_0_VEXT){
+		//devuelve el voltaje convertido
+		Voltaje = BAT_PROPORCION_IN_OUT * Voltaje;
 	}
 	
 	return(Voltaje);
@@ -149,12 +146,27 @@ void RestaurarConfigADC(void){
 void ConfigurarADC(void){
 #ifdef BATTERY_READ_EXTERNAL_H
 	//configura ADC externo
-	setup_vref(VREF_OFF);			//configura VRef
+	#if defined(BAT_VREF_INTERNO)
+		setup_vref(BAT_VREF_INTERNO);	//configura VRef
+		setup_adc_reference(VSS_FVR);	//0 - Fixed Voltage Reference
+
+	#elif defined(BAT_VREF_EXTERNO)
+		setup_vref(VREF_OFF);			//configura VRef
+		setup_adc_reference(VSS_VREF);	//0 - VrefH
+		#warning "Comprobar si funciona"
+
+	#else	//BAT_VREF_VDD
+		setup_vref(VREF_OFF);			//configura VRef
+		setup_adc_reference(VSS_VDD);	//0 - Vdd
+	#endif
+	
 	setup_adc(ADC_CLOCK_INTERNAL);	//configura ADC
 	set_adc_channel(BAT_ADC_CH);	//selecciona canal
 #else
 	//configura ADC interno
 	setup_vref(FVR_DEF);			//configura VRef
+	setup_adc_reference(VSS_VDD);	//0 - Vdd
+	#warning "La linea de arriba es nueva, funciona?"
 	setup_adc(ADC_CLOCK_INTERNAL);	//configura ADC
 	set_adc_channel(FVR_CHANNEL);	//selecciona canal
 #endif

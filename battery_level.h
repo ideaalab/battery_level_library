@@ -25,34 +25,94 @@
  * 1. Antes de nada incluir el header battery_types.h
  *		#include <battery_types.h>
  * 
- * 2. Definir el tipo de bateria usada con el define BAT_TYPE, usando los
- *    defines anteriores:
+ * 2. Incluir battery_level.c al proyecto DESPUES de las constantes de
+ *	  configuracion que se muestran abajo
+ *		#include <battery_level.c>
+ * 
+ * 3. Definir el tipo de bateria usada con el define BAT_TYPE, usando los
+ *    defines dentro de battery_types.h
  *		#define BAT_TYPE	BAT_1LIPO
  * 
- * 3. Si se usa una bateria de voltaje mayor a 5v se utiliza un pin ADC para
- *    las lecturas. Si se usa una bateria de Vbat < 5v se usa el FVR interno
- *    automaticamente, pero si se prefiere usar un pin ADC externo declarar:
- *		#define BAT_EXTERNAL_ADC
+ * LECTURA INTERNA: si se alimenta el PIC con una bateria de < 5v se puede
+ * leer su voltaje sin usar pines.
+ * 
+ * 4. El voltaje de referencia del FVR por defecto es 2.048v, pero si se quiere
+ *    usar otro declarar uno de estos (mirar los valores disponibles en el ".h"
+ *	  del PIC usado):
+ *		#define FVR_DEF		VREF_ADC_v1024
+ *		#define FVR_DEF		VREF_ADC_2v048
+ *		#define FVR_DEF		VREF_ADC_4v096
+ * 
+ * LECTURA EXTERNA: cuando el voltaje a leer supera el voltaje del PIC tenemos
+ * que usar un divisor de voltaje externo y un pin ADC para leerlo.
  * 
  * 4. Cuando se usa el ADC externo hay que:
- *		+Configurar el ADC en el setup inicial, declarando el pin
- *       correspondiente como analogico
- *		+Declarar:
- *			*BAT_PIC_VREF	-> voltaje de referencia para el ADC
- *							  (seguramente el del regulador de voltaje)
- *			*BAT_R1			-> resistencia R1, valor en ohmios
- *			*BAT_R2			-> resistencia R2, valor en ohmios
- *			*BAT_AD_CH		-> que canal del ADC se usa para leer el voltaje
+ *		+Si se quiere usar Vref interno del PIC declarar BAT_VREF_INTERNO con la
+ *		constantes del PIC (mirar los valores disponibles en el ".h" del PIC usado)
+ *			ej:
+ *			#define BAT_VREF_INTERNO	VREF_ADC_4v096
  * 
- * 5. Incluir battery_level.c (usando vX.X cuando corresponda)
- *		#include <battery_level_v0.3.c>
+ *		+Si se quiere usar Vref externo de un pin declarar BAT_VREF_EXTERNO con el
+ *		voltaje que se usa como referencia (el pin correspondiente a Vref high
+ *		debe estar conectado al voltaje de referencia)
+ *			ej:
+ *			#define BAT_VREF_EXTERNO	4.2
  * 
- * 5. Se puede definir BAT_DEBUG para ver valores (formulas) cuando se compila
+ *		+Si se usa el voltaje Vdd como referencia declarar BAT_PIC_VREF	con el
+ *		voltaje de referencia para el ADC
+ *			ej:
+ *			#define BAT_VREF_VDD		5.0
+ * 
+ * 5. Declarar BAT_R1 y BAT_R2 con los valores de resistencia en ohmios
+ *		ej:
+ *		#define BAT_R1				82000
+ *		#define BAT_R2				30000
+ * 
+ * 6. Declarar BAT_AD_CH con el canal del ADC se usa para leer el voltaje
+ *		ej:
+ *		#define BAT_AD_CH			3
+ * 
+ * VARIANTES:
+ *	+Si queremos leer el valor de una bateria de voltaje < 5v, pero que no esta
+ *	alimentando el PIC tenemos que usar un pin ADC para leerlo. Para voltajes
+ *	< 5v la libreria escoge automaticamente la lectura interna, pero hay que
+ *  cambiar a lectura externa con el siguiente define:
+ *		#define BAT_EXTERNAL_ADC
+ * 
+ *	+Si se quiere usar la lectura con pin ADC pero sin divisor de voltaje usar
+ *	estos valores para R1 y R2:
+ *		#define BAT_R1				0
+ *		#define BAT_R2				1
+ * 
+ *	+Se puede definir BAT_DEBUG para ver valores (formulas) cuando se compila
+ * 
+ * CONSIDERANCIONES:
+ * +Usar resistencias de 0.1% de tolerancia para el divisor de tension. Asi se
+ * obtienen valores muy precisos.
+ * +Tener cuidado de no sobrepasar Vref en el pin ADC.
+ * +Si queremos leer un voltaje ajeno a nuestro circuito tenemos que unir GND
+ *	del circuito externo con GND de nuestro circuito.
+ * +Ejemplos de resistencias:
+ * 
+ *		Voltajes hasta 15.3v, con Vref = Vdd = 5v
+ *			-R1 = 33K ohm
+ *			-R2 = 68K ohm
+ *			-Presicion: 0.06v (ADC 8bits) / 0.015v (ADC 10bits)
+ * 
+ *		Voltajes hasta 14.6v, con Vref interno = 4.096v
+ *			-R1 = 39K ohm
+ *			-R2 = 100K ohm
+ *			-Presicion: 0.057v (ADC 8bits) / 0.014v (ADC 10bits)
+ * 
+ *		Voltajes hasta 15.3v, con Vref interno = 4.096v
+ *			-R1 = 30K ohm
+ *			-R2 = 82K ohm
+ *			-Presicion: 0.06v (ADC 8bits) / 0.015v (ADC 10bits)
  * 
  * ---- EJEMPLO PARA LECTURA EXTERNA CON ADC Y DIVISOR DE TENSION ----
 #define BAT_TYPE		BAT_23A
 #define BAT_ADC_CH		2
-#define BAT_PIC_VREF	5.0		//se necesita una fuente estable para que los valores sean precisos
+#define BAT_VREF_VDD	5.0		//se necesita una fuente estable para que los valores sean precisos
 #define BAT_R1			68000	//ser lo mas exacto posible con los valores...
 #define	BAT_R2			33000	//...para que los resultados sean mas precisos
  * ---- EJEMPLO PARA LECTURA INTERNA CON FVR ----
@@ -117,7 +177,7 @@
 
 
 
-#define BAT_CRITICA		0
+#define BAT_CRITICA		0	//por debajo de 
 #define BAT_BAJA		1
 #define BAT_MEDIA		2
 #define BAT_ALTA		3
