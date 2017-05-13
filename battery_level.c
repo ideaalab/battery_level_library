@@ -11,6 +11,7 @@
  */
 #ifdef BATTERY_READ_INTERNAL_H
 float ADCenVoltaje(void){
+#warning "La lectura ADC creo que NO hay que invertira, ya que la invierte LeerADC(), probar"
 #if getenv("ADC_RESOLUTION") == 8
 int ValADC = ~LeerADC();			//leo voltaje ADC
 #elif getenv("ADC_RESOLUTION") == 10
@@ -78,42 +79,58 @@ long ValADC = 0;
 
 /*
  * Devuelve un valor de bateria entre 0 y 255
+ * Siendo 0 = V_BAT_MIN y 255 = V_BAT_MAX
+ * El valor leido puede estar por debajo o por encima de MIN y MAX pero esta
+ * funcion no lo tiene en cuenta.
  */
 int NivelBateria255(void){
-signed long ValADC = 0;
-signed long Val255 = 0;
-	
+long ValADC = 0;
+long Val255 = 0;
+
 	ValADC = LeerADC();	//leo voltaje ADC
-	ValADC = ValADC - ADC_BAT_MIN;
-	Val255 = ValADC * 255 / RANGO_ADC_BAT ;
 	
-	/*printf("RANGO: %Lu\r\n", RANGO_ADC_BAT);
-	printf("ADC255: %Ld\r\n\r\n", Val255);
-	printf("ADC-MIN: %Ld\r\n", ValADC);
-	printf("ADC: %Lu\r\n", ValADC);
-	printf("MIN: %Lu\r\n", ADC_BAT_MIN);*/
+	if(ValADC < ADC_BAT_MIN){
+		Val255 = 0;
+	}
+	else if(ValADC >= ADC_BAT_MAX){
+		Val255 = 255;
+	}
+	else{
+		ValADC = ValADC - ADC_BAT_MIN;
+		Val255 = ValADC * (255.0 / RANGO_ADC_BAT);
+		
+		if(Val255 > 255) Val255 = 255;
+	}
 	
-	if(Val255 < 0) Val255 = 0;
-	if(Val255 > 255) Val255 = 255;
-	
-	return (int)Val255;
+	return(Val255);
 }
 
 /*
  * Devuelve un valor de bateria entre 0 y Max
+ * 0 significa que la bateria esta por debajo del valor minimo
+ * 1 a Max es el estado de la bateria entre V_BAT_MIN y V_BAT_MAX
+ * Max es que la bateria esta en su maximo valor o por encima
  */
 int NivelBateria0_X(int Max){
-signed long ValADC = 0;
-signed long Val = 0;
+long ValADC = 0;
+long Val = 0;
 	
 	ValADC = LeerADC();	//leo voltaje ADC
-	ValADC = ValADC - ADC_BAT_MIN;
-	Val = ValADC * Max / RANGO_ADC_BAT;
 	
-	if(Val < 0) Val = 0;
-	if(Val > Max) Val = Max;
+	if(ValADC < ADC_BAT_MIN){
+		Val = 0;
+	}
+	else if(ValADC >= ADC_BAT_MAX){
+		Val = Max;
+	}
+	else{
+		ValADC = ValADC - ADC_BAT_MIN;
+		Val = 1 + (ValADC * Max / RANGO_ADC_BAT);
+		
+		if(Val > Max) Val = Max;
+	}
 	
-	return (int)Val;
+	return(Val);
 }
 
 /* ----------- FUNCIONES PRIVADAS ----------- */
@@ -149,28 +166,23 @@ void ConfigurarADC(void){
 	#if defined(BAT_VREF_INTERNO)
 		setup_vref(BAT_VREF_INTERNO);	//configura VRef
 		setup_adc_reference(VSS_FVR);	//0 - Fixed Voltage Reference
-
 	#elif defined(BAT_VREF_EXTERNO)
 		setup_vref(VREF_OFF);			//configura VRef
 		setup_adc_reference(VSS_VREF);	//0 - VrefH
 		#warning "Comprobar si funciona"
-
 	#else	//BAT_VREF_VDD
 		setup_vref(VREF_OFF);			//configura VRef
 		setup_adc_reference(VSS_VDD);	//0 - Vdd
 	#endif
-	
-	setup_adc(ADC_CLOCK_INTERNAL);	//configura ADC
-	set_adc_channel(BAT_ADC_CH);	//selecciona canal
 #else
 	//configura ADC interno
 	setup_vref(FVR_DEF);			//configura VRef
 	setup_adc_reference(VSS_VDD);	//0 - Vdd
 	#warning "La linea de arriba es nueva, funciona?"
-	setup_adc(ADC_CLOCK_INTERNAL);	//configura ADC
-	set_adc_channel(FVR_CHANNEL);	//selecciona canal
 #endif
 	
+	setup_adc(ADC_CLOCK_INTERNAL);	//configura ADC
+	set_adc_channel(BAT_ADC_CH);	//selecciona canal
 	delay_us(10);	//estabilizo el voltaje del canal
 }
 

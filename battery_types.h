@@ -6,11 +6,21 @@
  * hecho pruebas aun, asi que se dejan sin completar de momento.
  */
 
+/*
+ * BAT_X: Identificador de la bateria. El primer numero indica el tipo de bateria, el segundo indica el numero de celdas o variante
+ * BAT_X_NOM: Voltaje nominal de la bateria
+ * BAT_X_BAJA: Entre este valor y hasta BAT_X_MEDIA la bateria se considera con carga baja
+ * BAT_X_MEDIA: Entre este valor y hasta BAT_X_ALTA la bateria se considera con carga media
+ * BAT_X_ALTA: Por encima de este valor la bateria se considera con carga alta
+ * BAT_X_MIN: Por debajo de este valor la bateria se considera completamente descargada (deberia ser lo mismo que BAT_X_BAJA?)
+ * BAT_X_MAX: El voltaje que tiene la bateria cuando esta completamnte cargada
+ */
+
 /* TIPOS DE BATERIA */
 
 /* Bateria definida por el usuario */
 //Cuando se usa esta bateria hay que declarar manualmente los valores comentados
-//en nuestro propio header, no aqui!
+// --> en nuestro propio header, NO AQUI! <--
 #define BAT_CUSTOM		0
 /*#define V_BAT_NOM		(0.0)
 #define V_BAT_BAJA		(0.0)
@@ -129,18 +139,38 @@
 /* 1 NiMh */
 #define BAT_1NIMH		41
 #define BAT_1NIMH_NOM	(1.2)
+#define BAT_1NIMH_BAJA	(0.0)	//a partir de este valor es bajo
+#define BAT_1NIMH_MEDIA	(0.0)	//a partir de este valor es medio
+#define BAT_1NIMH_ALTA	(0.0)	//a partir de este valor es alto
+#define BAT_1NIMH_MIN	(0.0)	//este es el valor minimo que puede tener la bateria
+#define BAT_1NIMH_MAX	(0.0)	//este es el valor maximo que puede tener la bateria
 
 /* 2 NiMh */
 #define BAT_2NIMH		42
 #define BAT_2NIMH_NOM	(2.4)
+#define BAT_2NIMH_BAJA	(0.0)	//a partir de este valor es bajo
+#define BAT_2NIMH_MEDIA	(0.0)	//a partir de este valor es medio
+#define BAT_2NIMH_ALTA	(0.0)	//a partir de este valor es alto
+#define BAT_2NIMH_MIN	(0.0)	//este es el valor minimo que puede tener la bateria
+#define BAT_2NIMH_MAX	(0.0)	//este es el valor maximo que puede tener la bateria
 
 /* 3 NiMh */
 #define BAT_3NIMH		43
 #define BAT_3NIMH_NOM	(3.6)
+#define BAT_3NIMH_BAJA	(0.0)	//a partir de este valor es bajo
+#define BAT_3NIMH_MEDIA	(0.0)	//a partir de este valor es medio
+#define BAT_3NIMH_ALTA	(0.0)	//a partir de este valor es alto
+#define BAT_3NIMH_MIN	(0.0)	//este es el valor minimo que puede tener la bateria
+#define BAT_3NIMH_MAX	(0.0)	//este es el valor maximo que puede tener la bateria
 
 /* 4 NiMh */
 #define BAT_4NIMH		44
 #define BAT_4NIMH_NOM	(4.8)
+#define BAT_4NIMH_BAJA	(0.0)	//a partir de este valor es bajo
+#define BAT_4NIMH_MEDIA	(0.0)	//a partir de este valor es medio
+#define BAT_4NIMH_ALTA	(0.0)	//a partir de este valor es alto
+#define BAT_4NIMH_MIN	(0.0)	//este es el valor minimo que puede tener la bateria
+#define BAT_4NIMH_MAX	(0.0)	//este es el valor maximo que puede tener la bateria
 
 /* ---------------------------------- NiCd ---------------------------------- */
 // Las baterias NiCd comienzan con 5
@@ -159,22 +189,36 @@
 // Las baterias 23A/27A comienzan con 7
 #define BAT_23A			71
 #define BAT_23A_NOM		(12.0)
-#define BAT_23A_BAJA	(11.0)	//a partir de este valor es bajo
+#define BAT_23A_BAJA	(11.2)	//a partir de este valor es bajo
 #define BAT_23A_MEDIA	(11.5)	//a partir de este valor es medio
 #define BAT_23A_ALTA	(12.1)	//a partir de este valor es alto
-#define BAT_23A_MIN		(11.0)	//este es el valor minimo que puede tener la bateria
-#define BAT_23A_MAX		(12.5)	//este es el valor maximo que puede tener la bateria
+#define BAT_23A_MIN		(11.2)	//este es el valor minimo que puede tener la bateria
+#define BAT_23A_MAX		(12.3)	//este es el valor maximo que puede tener la bateria
 
 #define BAT_27A			72
 #define BAT_27A_NOM		(12.0)
-
+#define BAT_27A_BAJA	(0.0)	//a partir de este valor es bajo
+#define BAT_27A_MEDIA	(0.0)	//a partir de este valor es medio
+#define BAT_27A_ALTA	(0.0)	//a partir de este valor es alto
+#define BAT_27A_MIN		(0.0)	//este es el valor minimo que puede tener la bateria
+#define BAT_27A_MAX		(0.0)	//este es el valor maximo que puede tener la bateria
 
 /* ---------------------------- Baterias de plomo --------------------------- */
 // Las baterias de plomo comienzan con 8
 #define BAT_PB_6V		81
 #define BAT_PB_6V_NOM	(6.0)
+#define BAT_PB_6V_BAJA	(0.0)	//a partir de este valor es bajo
+#define BAT_PB_6V_MEDIA	(0.0)	//a partir de este valor es medio
+#define BAT_PB_6V_ALTA	(0.0)	//a partir de este valor es alto
+#define BAT_PB_6V_MIN	(0.0)	//este es el valor minimo que puede tener la bateria
+#define BAT_PB_6V_MAX	(0.0)	//este es el valor maximo que puede tener la bateria
 
-#define BAT_PB_12V		82
-#define BAT_PB_12V_NOM	(12.0)
+#define BAT_PB_12V			82
+#define BAT_PB_12V_NOM		(12.0)
+#define BAT_PB_12V_BAJA		(0.0)	//a partir de este valor es bajo
+#define BAT_PB_12V_MEDIA	(0.0)	//a partir de este valor es medio
+#define BAT_PB_12V_ALTA		(0.0)	//a partir de este valor es alto
+#define BAT_PB_12V_MIN		(0.0)	//este es el valor minimo que puede tener la bateria
+#define BAT_PB_12V_MAX		(0.0)	//este es el valor maximo que puede tener la bateria
 
 #endif	/* BATTERY_TYPES_H */

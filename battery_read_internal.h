@@ -71,6 +71,8 @@
 #ERROR "Error de FVR ¿El PIC no tiene FVR?"
 #endif
 
+#define BAT_ADC_CH		FVR_CHANNEL
+
 /* CALCULOS DE BATERIA Y ADC */
 #define ADCMAX_X_FVR	(ADC_MAX_VAL * V_FVR)
 

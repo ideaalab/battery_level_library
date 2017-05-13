@@ -68,9 +68,9 @@
  *		#define BAT_R1				82000
  *		#define BAT_R2				30000
  * 
- * 6. Declarar BAT_AD_CH con el canal del ADC se usa para leer el voltaje
+ * 6. Declarar BAT_ADC_CH con el canal del ADC se usa para leer el voltaje
  *		ej:
- *		#define BAT_AD_CH			3
+ *		#define BAT_ADC_CH			3
  * 
  * VARIANTES:
  *	+Si queremos leer el valor de una bateria de voltaje < 5v, pero que no esta
@@ -88,11 +88,12 @@
  * 
  * CONSIDERANCIONES:
  * +Usar resistencias de 0.1% de tolerancia para el divisor de tension. Asi se
- * obtienen valores muy precisos.
+ * obtienen valores mas precisos.
  * +Tener cuidado de no sobrepasar Vref en el pin ADC.
  * +Si queremos leer un voltaje ajeno a nuestro circuito tenemos que unir GND
  *	del circuito externo con GND de nuestro circuito.
- * +Ejemplos de resistencias:
+ * +Ejemplos de resistencias (en la presicion no se tiene en cuenta la tolerancia
+ *	de las resistencias):
  * 
  *		Voltajes hasta 15.3v, con Vref = Vdd = 5v
  *			-R1 = 33K ohm
@@ -145,8 +146,7 @@
  *		> read = VOLT_0_VREF -> devuelve el voltaje leido en el ADC
  *		> read = VOLT_0_VEXT -> devuelve el voltaje antes de pasar por el divisor
  *		de tension usando los valores de R1 y R2 como referencia para el calculo.
- *		El valor devuelto es una aproximacion, y depende de la presicion de las
- *		resistencias y otros factores.
+ *		Es el voltaje directo de la bateria.
  * 
  */
 
@@ -174,8 +174,6 @@
 #ifndef BAT_TYPE
 #ERROR "Hay que declarar el tipo de bateria que se usa"
 #endif
-
-
 
 #define BAT_CRITICA		0	//por debajo de 
 #define BAT_BAJA		1

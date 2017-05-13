@@ -71,6 +71,8 @@
 	#define V_REF			(2.048)
 	#elif BAT_VREF_INTERNO == VREF_ADC_4v096
 	#define V_REF			(4.096)
+	#else
+	#ERROR "El Vref interno seleccionado no es correcto"
 	#endif
 #elif defined(BAT_VREF_EXTERNO)
 	#define V_REF	BAT_VREF_EXTERNO
