@@ -4,6 +4,8 @@
 
 /*
  * Lee el valor del ADC y devuelve el voltaje
+ * Para lectura del FVR tenemos que "desinvertir" el ADC leido e invertido en la
+ * funcion LeerADC() para que los calculos funcionen
  * En el caso del FVR, solo puede devolver el valor leido
  * En el caso de la lectura externa con ADC, puede devolver:
  * VOLT_0_VREF: el voltaje leido del adc, despues del divisor de tension
@@ -11,7 +13,6 @@
  */
 #ifdef BATTERY_READ_INTERNAL_H
 float ADCenVoltaje(void){
-#warning "La lectura ADC creo que NO hay que invertira, ya que la invierte LeerADC(), probar"
 #if getenv("ADC_RESOLUTION") == 8
 int ValADC = ~LeerADC();			//leo voltaje ADC
 #elif getenv("ADC_RESOLUTION") == 10
@@ -178,7 +179,6 @@ void ConfigurarADC(void){
 	//configura ADC interno
 	setup_vref(FVR_DEF);			//configura VRef
 	setup_adc_reference(VSS_VDD);	//0 - Vdd
-	#warning "La linea de arriba es nueva, funciona?"
 #endif
 	
 	setup_adc(ADC_CLOCK_INTERNAL);	//configura ADC
