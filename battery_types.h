@@ -34,10 +34,10 @@
 /* 1 LiPo */
 #define BAT_1LIPO		11
 #define BAT_1LIPO_NOM	(3.7)	//voltaje nominal
-#define BAT_1LIPO_BAJA	(3.2)	//a partir de este valor es bajo
-#define BAT_1LIPO_MEDIA	(3.5)	//a partir de este valor es medio
+#define BAT_1LIPO_BAJA	(3.3)	//a partir de este valor es bajo
+#define BAT_1LIPO_MEDIA	(3.6)	//a partir de este valor es medio
 #define BAT_1LIPO_ALTA	(4.0)	//a partir de este valor es alto
-#define BAT_1LIPO_MIN	(3.2)	//este es el valor minimo que puede tener la bateria
+#define BAT_1LIPO_MIN	(3.3)	//este es el valor minimo que puede tener la bateria
 #define BAT_1LIPO_MAX	(4.2)	//este es el valor maximo que puede tener la bateria
 
 /* 2 LiPo */
