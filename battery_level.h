@@ -1,14 +1,12 @@
 /* 
- * File:   NivelBateria_v0.3.h
  * Author: Martin
- * Version: v0.3
  * Fecha: 20/Jan/2016
  * 
  * ----------------------------- CHANGE LOG -----------------------------------
  * v0.3
- * -Se añade compatibilidad con pilas y baterias de mayor voltaje usando un
+ * -Se a?ade compatibilidad con pilas y baterias de mayor voltaje usando un
  * divisor de tension en un pin analogico externo
- * -Se añade una funcion que devuelve el voltaje leido (lectura ADC convertida en V)
+ * -Se a?ade una funcion que devuelve el voltaje leido (lectura ADC convertida en V)
  * -Se documentan a fondo todas las formulas usadas
  * -Se prueba el funcionamiento con lectura de FVR y los resultados son
  * perfectos, con una presicion de 2 decimales
@@ -155,8 +153,16 @@
 
 /* REGISTROS */
 #byte FVRCON = getenv("SFR:FVRCON")	//registro de FVR
+//segun el PIC tenga una ADC de 8 o 10 bits utiliza uno o mas registros para almacenar la lectura
+#if getenv("SFR_VALID:ADCON") == TRUE
+#byte ADCON = getenv("SFR:ADCON")	//registro A/D 0
+#endif
+#if getenv("SFR_VALID:ADCON0") == TRUE
 #byte ADCON0 = getenv("SFR:ADCON0")	//registro A/D 0
+#endif
+#if getenv("SFR_VALID:ADCON1") == TRUE
 #byte ADCON1 = getenv("SFR:ADCON1")	//registro A/D 1
+#endif
 #bit FVREN = getenv("BIT:FVREN")	//bit FVR enabled
 #bit FVRRDY = getenv("BIT:FVRRDY")	//bit FVR ready
 //#bit VREGPM1	= getenv("BIT:VREGPM1")	//Voltage Regulator Power Mode Selection bit
@@ -248,8 +254,16 @@
 
 /* VARIABLES */
 int Save_FVRCON = 0;
+//segun el PIC tenga una ADC de 8 o 10 bits utiliza uno o mas registros para almacenar la lectura
+#if getenv("SFR_VALID:ADCON") == TRUE
+int Save_ADCON = 0;
+#endif
+#if getenv("SFR_VALID:ADCON0") == TRUE
 int Save_ADCON0 = 0;
+#endif
+#if getenv("SFR_VALID:ADCON1") == TRUE
 int Save_ADCON1 = 0;
+#endif
 
 /* PROTOTIPOS */
 //publicas

@@ -53,22 +53,44 @@
  *	=	0b00000011 00101001 (809   / 0x0329)
  * 
  */
-
 /* CONFIGURACION FVR */
 #ifndef FVR_DEF
-//#define FVR_DEF	VREF_ADC_1v024
-#define FVR_DEF		VREF_ADC_2v048
-//#define FVR_DEF	VREF_ADC_4v096
-#endif
+	#ifdef VREF_ADC_1v024
+		//#define FVR_DEF	VREF_ADC_1v024
+		#define FVR_DEF		VREF_ADC_2v048
+		//#define FVR_DEF	VREF_ADC_4v096
+	#else
+		#ifdef VREF_1v024
+			//#define FVR_DEF	VREF_1v024
+			#define FVR_DEF		VREF_2v048
+			//#define FVR_DEF	VREF_4v096
+		#endif
+	#endif
 
-#if FVR_DEF == VREF_ADC_1v024
-#define V_FVR			(1.024)
-#elif FVR_DEF == VREF_ADC_2v048
-#define V_FVR			(2.048)
-#elif FVR_DEF == VREF_ADC_4v096
-#define V_FVR			(4.096)
+//algunos PIC usan "VREF_ADC_XvXXX" como constante
+#ifdef VREF_ADC_1v024
+	#if FVR_DEF == VREF_ADC_1v024
+		#define V_FVR			(1.024)
+	#elif FVR_DEF == VREF_ADC_2v048
+		#define V_FVR			(2.048)
+	#elif FVR_DEF == VREF_ADC_4v096
+		#define V_FVR			(4.096)
+	#else
+		#ERROR "Error de FVR. El PIC no tiene FVR?"
+	#endif
 #else
-#ERROR "Error de FVR ¿El PIC no tiene FVR?"
+	//otros PIC usan "VREF_XvXXX" como constante
+	#ifdef VREF_1v024
+		#if FVR_DEF == VREF_1v024
+			#define V_FVR			(1.024)
+		#elif FVR_DEF == VREF_2v048
+			#define V_FVR			(2.048)
+		#elif FVR_DEF == VREF_4v096
+			#define V_FVR			(4.096)
+		#else
+			#ERROR "Error de FVR. El PIC no tiene FVR?"
+		#endif
+	#endif
 #endif
 
 #define BAT_ADC_CH		FVR_CHANNEL

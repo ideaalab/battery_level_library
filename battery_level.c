@@ -144,9 +144,19 @@ long Val = 0;
 void GuardarConfigADC(void){
 	//guarda la config de FVR
 	Save_FVRCON = FVRCON;
+	
 	//guarda la config general del ADC
+#if getenv("SFR_VALID:ADCON") == TRUE
+	Save_ADCON = ADCON;
+#endif
+	
+#if getenv("SFR_VALID:ADCON0") == TRUE
 	Save_ADCON0 = ADCON0;
+#endif
+	
+#if getenv("SFR_VALID:ADCON1") == TRUE
 	Save_ADCON1 = ADCON1;
+#endif
 }
 
 /*
@@ -154,8 +164,18 @@ void GuardarConfigADC(void){
  */
 void RestaurarConfigADC(void){
 	FVRCON = Save_FVRCON;
+	
+#if getenv("SFR_VALID:ADCON") == TRUE
+	ADCON = Save_ADCON;
+#endif
+	
+#if getenv("SFR_VALID:ADCON0") == TRUE
 	ADCON0 = Save_ADCON0;
+#endif
+	
+#if getenv("SFR_VALID:ADCON1") == TRUE
 	ADCON1 = Save_ADCON1;
+#endif
 }
 
 /*
@@ -176,9 +196,11 @@ void ConfigurarADC(void){
 		setup_adc_reference(VSS_VDD);	//0 - Vdd
 	#endif
 #else
-	//configura ADC interno
+	//activa el voltaje de referencia interno (no es lo mismo que el ADC reference!)
 	setup_vref(FVR_DEF);			//configura VRef
-	setup_adc_reference(VSS_VDD);	//0 - Vdd
+	
+	//por defecto es siempre asi
+	//setup_adc_reference(VSS_VDD);	//0 - Vdd
 #endif
 	
 	setup_adc(ADC_CLOCK_INTERNAL);	//configura ADC
