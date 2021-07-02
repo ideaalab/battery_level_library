@@ -66,6 +66,7 @@
 			//#define FVR_DEF	VREF_4v096
 		#endif
 	#endif
+#endif
 
 //algunos PIC usan "VREF_ADC_XvXXX" como constante
 #ifdef VREF_ADC_1v024

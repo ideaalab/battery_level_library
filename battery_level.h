@@ -90,7 +90,7 @@
  * +Tener cuidado de no sobrepasar Vref en el pin ADC.
  * +Si queremos leer un voltaje ajeno a nuestro circuito tenemos que unir GND
  *	del circuito externo con GND de nuestro circuito.
- * +Ejemplos de resistencias (en la presicion no se tiene en cuenta la tolerancia
+ * +Ejemplos de resistencias (en la precision no se tiene en cuenta la tolerancia
  *	de las resistencias):
  * 
  *		Voltajes hasta 15.3v, con Vref = Vdd = 5v
